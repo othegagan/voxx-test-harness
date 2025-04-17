@@ -9,7 +9,7 @@ import type * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-    'w-full md:w-fit inline-flex items-center justify-center text-nowrap whitespace-nowrap rounded-md text-sm font-medium  focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring  disabled:pointer-events-none rounded-full',
+    'w-full inline-flex items-center justify-center text-nowrap whitespace-nowrap rounded-md text-sm font-medium  focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring  disabled:pointer-events-none ',
     {
         variants: {
             variant: {
@@ -50,7 +50,7 @@ const buttonVariants = cva(
 //@ts-ignore
 export interface ButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
     asChild?: boolean;
-    loading?: boolean;
+    isLoading?: boolean;
     loadingText?: string;
     prefix?: React.ReactNode;
     suffix?: React.ReactNode;
@@ -65,7 +65,7 @@ const Button = ({
     size,
     shape,
     asChild = false,
-    loading,
+    isLoading,
     loadingText,
     prefix,
     suffix,
@@ -75,11 +75,11 @@ const Button = ({
     ...props
 }: ButtonProps) => {
     const Comp = asChild ? Slot : href ? 'a' : 'button';
-    const isDisabled = loading || props.disabled;
+    const isDisabled = isLoading || props.disabled;
 
     // Determine where to render the loader
-    const renderPrefix = !loading || !suffix;
-    const renderSuffix = loading && suffix;
+    const renderPrefix = !isLoading || !suffix;
+    const renderSuffix = isLoading && suffix;
 
     // Adjust focus styles dynamically
     // const focusStyles = Comp === 'a' ? 'focus:ring-blue-400' : 'focus:outline-hidden focus:ring-3 focus:ring-offset-2';
@@ -87,7 +87,7 @@ const Button = ({
     const buttonContent = (
         <Comp
             className={cn(
-                'group w-auto cursor-pointer select-none gap-2 transition-all duration-300 ease-linear active:scale-95',
+                'group cursor-pointer select-none gap-2 transition-all duration-300 ease-linear active:scale-95',
                 isDisabled && 'cursor-not-allowed opacity-60',
                 buttonVariants({ variant, size, shape, className })
                 // focusStyles // Apply focus styles only if Comp is not 'a'
@@ -98,10 +98,14 @@ const Button = ({
             disabled={isDisabled}
             {...props}>
             {/* Conditionally render the prefix or loader */}
-            {renderPrefix && (loading ? <Loader2 className='h-4 w-4 animate-spin' /> : prefix ? <span>{prefix}</span> : null)}
+            {renderPrefix && (isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : prefix ? <span>{prefix}</span> : null)}
 
             {/* Handle text or children */}
-            {typeof children === 'string' ? <span className='truncate'>{loading && loadingText ? loadingText : children}</span> : children}
+            {typeof children === 'string' ? (
+                <span className='truncate'>{isLoading && loadingText ? loadingText : children}</span>
+            ) : (
+                children
+            )}
 
             {/* Conditionally render the suffix or loader */}
             {renderSuffix && <Loader2 className='h-4 w-4 animate-spin' />}
