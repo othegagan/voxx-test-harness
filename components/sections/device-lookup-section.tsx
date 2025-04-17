@@ -86,7 +86,7 @@ export const DeviceLookupSection = ({ authState }: DeviceLookupSectionProps) => 
                     <TabsContent value="air" className="mt-2">
                         <div className="flex gap-2">
                             <Input type="text" value={airId} onChange={(e) => setAirId(e.target.value)} placeholder="Enter Air ID" />
-                            <Button onClick={() => {}}>Search</Button>
+                            <Button onClick={() => {}} disabled>Search</Button>
                         </div>
                     </TabsContent>
 
