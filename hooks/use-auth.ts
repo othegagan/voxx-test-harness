@@ -1,6 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface AuthState {
     isAuthenticated: boolean;
@@ -9,6 +11,8 @@ export interface AuthState {
 }
 
 export function useAuth() {
+    const router = useRouter();
+
     const [authState, setAuthState] = useState<AuthState>({
         isAuthenticated: false,
         token: '',
@@ -53,7 +57,9 @@ export function useAuth() {
             token: '',
             accountId: ''
         });
-        window.location.reload();
+        router.replace('/');
+        router.refresh();
+        toast.warning('Logged out successfully');
     };
 
     return {
