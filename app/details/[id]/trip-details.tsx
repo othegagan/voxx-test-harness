@@ -67,6 +67,7 @@ export default function TripDetails({ id }: Props) {
             <div className='grid grid-cols-2 gap-4'>
                 <pre className='max-h-[80dvh] overflow-y-auto rounded-md border p-2 text-sm'>{JSON.stringify(data, null, 2)}</pre>
                 <div>
+                    {/* @ts-ignore */}
                     <MapBox tripPoints={data?.results?.tripList || []} />
                 </div>
             </div>
