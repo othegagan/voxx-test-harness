@@ -9,9 +9,10 @@ interface Props {
 
 export default function MapBox({ tripPoints }: Props) {
     const [mapLoaded, setMapLoaded] = useState(false);
-    const [mapError, setMapError] = useState(null);
+    const [mapError, setMapError] = useState<string | null>(null);
 
     // Sort points by timeOfFix to get chronological order
+    //@ts-ignore
     const sortedPoints = [...tripPoints].sort((a, b) => new Date(a.timeOfFix) - new Date(b.timeOfFix));
 
     // Initialize the map when component mounts
@@ -20,20 +21,24 @@ export default function MapBox({ tripPoints }: Props) {
         const loadMap = () => {
             try {
                 // Make sure Leaflet is available
+                //@ts-ignore
                 if (!window.L) {
                     throw new Error('Leaflet library not loaded');
                 }
 
                 // Create a map centered on the first point
+                //@ts-ignore
                 const map = window.L.map('map').setView([sortedPoints[0].latitude, sortedPoints[0].longitude], 13);
 
                 // Add OpenStreetMap tiles
+                //@ts-ignore
                 window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
                 // Create a polyline for the route
                 const routePoints = sortedPoints.map((point) => [point.latitude, point.longitude]);
+                //@ts-ignore
                 const polyline = window.L.polyline(routePoints, {
                     color: 'blue',
                     weight: 4,
@@ -41,25 +46,11 @@ export default function MapBox({ tripPoints }: Props) {
                 }).addTo(map);
 
                 // Add markers for start and end points
-                const startMarker = window.L.marker([sortedPoints[0].latitude, sortedPoints[0].longitude], {
-                    icon: window.L.divIcon({
-                        html: '<div style="background-color: green; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
-                        className: 'custom-marker'
-                    })
-                }).addTo(map);
 
-                const endMarker = window.L.marker(
-                    [sortedPoints[sortedPoints.length - 1].latitude, sortedPoints[sortedPoints.length - 1].longitude],
-                    {
-                        icon: window.L.divIcon({
-                            html: '<div style="background-color: red; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
-                            className: 'custom-marker'
-                        })
-                    }
-                ).addTo(map);
                 // Add small markers for each data point
                 sortedPoints.forEach((point, index) => {
                     if (index !== 0 && index !== sortedPoints.length - 1) {
+                        //@ts-ignore
                         const marker = window.L.circleMarker([point.latitude, point.longitude], {
                             radius: 3,
                             fillColor: '#3388ff',
@@ -80,6 +71,7 @@ export default function MapBox({ tripPoints }: Props) {
                 setMapLoaded(true);
             } catch (error) {
                 console.error('Error loading map:', error);
+                //@ts-ignore
                 setMapError(error.message);
             }
         };
@@ -105,17 +97,17 @@ export default function MapBox({ tripPoints }: Props) {
     }, []);
 
     // Find max speed
-    const maxSpeed = Math.max(...tripPoints.map((point) => Number.parseInt(point.speed) || 0));
+    // const maxSpeed = Math.max(...tripPoints.map((point) => Number.parseInt(point.speed) || 0));
     return (
-        <div className=' rounded-lg shadow overflow-hidden'>
-            <h4 className='text-lg font-bold'>Route Map</h4>
+        <div className=' overflow-hidden rounded-lg shadow'>
+            <h4 className='font-bold text-lg'>Route Map</h4>
 
-            {mapError && <div className='p-4  text-red-600 border-b'>Error loading map: {mapError}</div>}
+            {mapError && <div className='border-b p-4 text-red-600'>Error loading map: {mapError}</div>}
 
             {!mapLoaded && !mapError && (
-                <div className='flex justify-center items-center h-64 '>
-                    <div className='animate-pulse text-gray-500 flex flex-col items-center'>
-                        <Locate className='animate-spin mb-2' size={24} />
+                <div className='flex h-64 items-center justify-center '>
+                    <div className='flex animate-pulse flex-col items-center text-gray-500'>
+                        <Locate className='mb-2 animate-spin' size={24} />
                         <p>Loading map...</p>
                     </div>
                 </div>

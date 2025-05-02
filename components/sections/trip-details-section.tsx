@@ -139,7 +139,7 @@ export const TripDetailsSection = ({ authState }: TripDetailsSectionProps) => {
                         </thead>
                         <tbody className='max-h-40 overflow-y-auto'>
                             {trips.map((trip, index) => (
-                                <tr key={index} >
+                                <tr key={index}>
                                     <td className='border p-2'>
                                         <Link href={`/details/${trip.tripId}`} target='_blank'>
                                             {trip.tripId.slice(0, 8)}...

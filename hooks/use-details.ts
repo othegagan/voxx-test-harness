@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useAuth } from './use-auth';
 
 const useFetchTripDetails = (id: string) => {

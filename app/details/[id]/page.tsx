@@ -3,9 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { LogOutIcon } from 'lucide-react';
+import Link from 'next/link';
 import { use } from 'react';
 import TripDetails from './trip-details';
-import Link from 'next/link';
 
 interface Props {
     params: Promise<{ id: string }>;

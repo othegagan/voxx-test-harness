@@ -3,7 +3,6 @@ import axios from 'axios';
 const baseUrl = process.env.NEXT_PUBLIC_VOXX_API_URL;
 
 export default async function login(username: string, password: string) {
-
     const encodedUsername = encodeURIComponent(username);
     const encodedPassword = encodeURIComponent(password);
 
